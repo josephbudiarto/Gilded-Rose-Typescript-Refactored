@@ -1,67 +1,41 @@
-export class Item {
-    name: string;
-    sellIn: number;
-    quality: number;
-
-    constructor(name, sellIn, quality) {
-        this.name = name;
-        this.sellIn = sellIn;
-        this.quality = quality;
-    }
-}
+import { Item, General, Aged, Conjured, BackStageTicket, Legendary } from './inventory';
+import { Inventory } from "./util/helpers";
 
 export class GildedRose {
-    items: Array<Item>;
+    items: Inventory[];
 
-    constructor(items = [] as Array<Item>) {
-        this.items = items;
+    constructor(items: Item[] = []) {
+        this.items = GildedRose._init(items);
     }
 
-    updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality > 0) {
-                    if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                        this.items[i].quality = this.items[i].quality - 1
-                    }
-                }
+    private static _init(items: Item[]): Inventory[] {
+        let inventory: Inventory[] = [];
+
+        for (let item of items) {
+            let product: Inventory;
+
+            // Can definitely be refactored if not because of the goblin ...
+            if (item.name.toLowerCase().includes('aged')) {
+                product = new Aged(item.name, item.sellIn, item.quality);
+            } else if (item.name.toLowerCase().includes('conjured')) {
+                product = new Conjured(item.name, item.sellIn, item.quality);
+            } else if (item.name.toLowerCase().includes('backstage passes')) {
+                product = new BackStageTicket(item.name, item.sellIn, item.quality);
+            } else if (item.name.toLowerCase().includes('sulfuras')) {
+                product = new Legendary(item.name, item.sellIn, item.quality);
             } else {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality = this.items[i].quality + 1
-                    if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].sellIn < 11) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                        if (this.items[i].sellIn < 6) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                    }
-                }
+                product = new General(item.name, item.sellIn, item.quality);
             }
-            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].sellIn = this.items[i].sellIn - 1;
-            }
-            if (this.items[i].sellIn < 0) {
-                if (this.items[i].name != 'Aged Brie') {
-                    if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].quality > 0) {
-                            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                                this.items[i].quality = this.items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        this.items[i].quality = this.items[i].quality - this.items[i].quality
-                    }
-                } else {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality = this.items[i].quality + 1
-                    }
-                }
-            }
+
+            inventory.push(product);
+        }
+
+        return inventory;
+    }
+
+    updateQuality(): Inventory[] {
+        for (let item of this.items) {
+            item.updateQuality();
         }
 
         return this.items;
