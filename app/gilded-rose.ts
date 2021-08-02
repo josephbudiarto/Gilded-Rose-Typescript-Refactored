@@ -1,14 +1,14 @@
-import { Item, General, Aged, Conjured, BackStageTicket, Legendary } from './inventory';
+import { General, Aged, Conjured, BackStageTicket, Legendary } from './inventory';
 import { Inventory } from "./util/helpers";
 
 export class GildedRose {
     items: Inventory[];
 
-    constructor(items: Item[] = []) {
+    constructor(items: Inventory[] = []) {
         this.items = GildedRose._init(items);
     }
 
-    private static _init(items: Item[]): Inventory[] {
+    private static _init(items: Inventory[]): Inventory[] {
         let inventory: Inventory[] = [];
 
         for (let item of items) {

@@ -11,7 +11,4 @@ export default class Legendary extends Item {
         super(name, sellIn, quality);
     }
 
-    updateQuality (): void {
-        // I am legendary I never degrade!
-    }
 }

@@ -8,4 +8,8 @@ export class Item {
         this.sellIn = sellIn;
         this.quality = quality;
     }
+
+    updateQuality (): void {
+        // please cover for me ...
+    }
 }
